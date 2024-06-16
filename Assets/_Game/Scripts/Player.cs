@@ -5,17 +5,12 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class Player : MonoBehaviour
-{
-
-    public TextMeshProUGUI wordText; 
-    public TextMeshProUGUI inputText; 
-    private string targetWord = "apple";
+{ 
+    [SerializeField] private GameObject bulletPrefab;
+    [SerializeField] private Enemy selectedEnemy;
     private string currentInput = "";
-
     private void Start()
     {
-        wordText.text = targetWord;
-        inputText.text = "";
     }
     private void Update()
     {
@@ -35,17 +30,22 @@ public class Player : MonoBehaviour
             else
             {
                 currentInput += c;
-                CheckInput();
-            }
+                Debug.Log(currentInput);
 
-            inputText.text = currentInput;
+                CheckInput(currentInput.Length - 1);
+            }
         }
     }
-    void CheckInput()
+    private void CheckInput(int i)
     {
-        if (currentInput == targetWord)
+        if (currentInput[i] == selectedEnemy.text[i])
         {
-            currentInput = ""; // Reset input after correct word
+            Shoot();
         }
+    }
+    private void Shoot()
+    {
+        Bullet bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity).GetComponent<Bullet>();
+        bullet.Initialize(selectedEnemy);
     }
 }
